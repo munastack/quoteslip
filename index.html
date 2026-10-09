@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Quoteslip | Price a web project in naira</title>
+  <meta name="description" content="Pick a package, extra pages and add-ons, and get an itemised naira quote for a web project. Edit your own rates, copy the quote or save it as a PDF.">
+  <meta name="theme-color" content="#E9EEEA">
+  <meta property="og:title" content="Quoteslip | Price a web project in naira">
+  <meta property="og:description" content="An itemised naira quote for a web project, built in a few clicks.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <a class="skip" href="#tool">Skip to the calculator</a>
+
+  <header class="top">
+    <a class="brand" href="/" aria-label="Quoteslip home">
+      <img src="/favicon.svg" alt="" width="28" height="28">
+      <span>Quoteslip</span>
+    </a>
+  </header>
+
+  <main id="main">
+    <section class="intro">
+      <h1>Price a web project in naira</h1>
+      <p>Choose what the client needs. The slip adds it up as you go, and you can change every rate to match how you charge.</p>
+    </section>
+
+    <div class="layout" id="tool">
+      <form id="quote-form" class="controls" novalidate autocomplete="off">
+
+        <fieldset>
+          <legend>Client</legend>
+          <label class="field" for="client">Client or business name</label>
+          <input id="client" name="client" type="text" maxlength="60" placeholder="For example, Chashar Farms Limited">
+        </fieldset>
+
+        <fieldset>
+          <legend>Package</legend>
+          <label class="choice">
+            <input type="radio" name="type" value="landing" checked>
+            <span class="choice-text"><strong>Landing page</strong><small>One page, mobile ready, contact details</small></span>
+            <span class="choice-price" data-price="type.landing"></span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="type" value="business">
+            <span class="choice-text"><strong>Business website</strong><small>Up to five pages with shared header and footer</small></span>
+            <span class="choice-price" data-price="type.business"></span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="type" value="webapp">
+            <span class="choice-text"><strong>Web app</strong><small>Custom screens with a database behind them</small></span>
+            <span class="choice-price" data-price="type.webapp"></span>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Extra pages</legend>
+          <div class="stepper">
+            <button type="button" id="pages-minus" aria-label="Remove one extra page">&minus;</button>
+            <input id="pages" name="pages" type="number" inputmode="numeric" min="0" max="50" value="0" aria-describedby="pages-help">
+            <button type="button" id="pages-plus" aria-label="Add one extra page">+</button>
+          </div>
+          <p class="help" id="pages-help">Pages beyond what the package already covers. Each one is <span data-price="extraPage"></span>.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Add-ons</legend>
+          <label class="choice">
+            <input type="checkbox" name="addon" value="form">
+            <span class="choice-text"><strong>Contact form</strong><small>Messages delivered to the client's email</small></span>
+            <span class="choice-price" data-price="addons.form"></span>
+          </label>
+          <label class="choice">
+            <input type="checkbox" name="addon" value="paystack">
+            <span class="choice-text"><strong>Paystack payments</strong><small>Checkout and payment confirmation</small></span>
+            <span class="choice-price" data-price="addons.paystack"></span>
+          </label>
+          <label class="choice">
+            <input type="checkbox" name="addon" value="accounts">
+            <span class="choice-text"><strong>Sign up and login</strong><small>User accounts with protected pages</small></span>
+            <span class="choice-price" data-price="addons.accounts"></span>
+          </label>
+          <label class="choice">
+            <input type="checkbox" name="addon" value="admin">
+            <span class="choice-text"><strong>Admin dashboard</strong><small>Client can manage their own content</small></span>
+            <span class="choice-price" data-price="addons.admin"></span>
+          </label>
+          <label class="choice">
+            <input type="checkbox" name="addon" value="seo">
+            <span class="choice-text"><strong>Search setup</strong><small>Titles, descriptions, sitemap, Google listing</small></span>
+            <span class="choice-price" data-price="addons.seo"></span>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Timeline</legend>
+          <label class="choice">
+            <input type="checkbox" name="rush" id="rush">
+            <span class="choice-text"><strong>Needed in under two weeks</strong><small>Adds <span data-pct="rushPct"></span> to the subtotal</small></span>
+          </label>
+        </fieldset>
+
+        <details class="rates" id="rates">
+          <summary>Edit my rates</summary>
+          <p class="help">Amounts are in naira. They are saved in this browser only and never sent anywhere.</p>
+          <div class="rate-grid" id="rate-grid"></div>
+          <button type="button" class="ghost" id="reset-rates">Reset to default rates</button>
+        </details>
+      </form>
+
+      <aside class="slip-wrap" aria-label="Quote">
+        <article class="slip" id="slip">
+          <header class="slip-head">
+            <h2>Quote</h2>
+            <p class="slip-meta"><span id="slip-date"></span></p>
+            <p class="slip-for" id="slip-for">For: not named yet</p>
+          </header>
+
+          <ul class="lines" id="lines" aria-live="polite"></ul>
+
+          <dl class="sums">
+            <div class="sum"><dt>Subtotal</dt><dd id="sum-sub"></dd></div>
+            <div class="sum" id="sum-rush-row" hidden><dt id="sum-rush-label">Rush</dt><dd id="sum-rush"></dd></div>
+            <div class="sum total"><dt>Total</dt><dd id="sum-total" aria-live="polite"></dd></div>
+            <div class="sum soft"><dt id="sum-dep-label">Deposit to start</dt><dd id="sum-dep"></dd></div>
+            <div class="sum soft"><dt>Balance on delivery</dt><dd id="sum-bal"></dd></div>
+          </dl>
+        </article>
+
+        <div class="actions">
+          <button type="button" class="primary" id="copy">Copy quote as text</button>
+          <button type="button" class="secondary" id="print">Print or save as PDF</button>
+        </div>
+        <p class="status" id="status" role="status"></p>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <p>&copy; <span id="year">2026</span> Quoteslip. Prices on this page are examples until you set your own.</p>
+  </footer>
+
+  <div class="totalbar" id="totalbar">
+    <div><span>Total</span><strong id="bar-total"></strong></div>
+    <a href="#slip">View slip</a>
+  </div>
+
+  <script src="/js/app.js" defer></script>
+</body>
+</html>
